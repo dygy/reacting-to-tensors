@@ -1,8 +1,8 @@
 import React from 'react';
 import './App.css';
-import {Footer} from "./views/footer/footer";
-import {HandposeComponent} from "./views/handpose/handpose.component";
-import {useButtonActions} from "./controll/use-button-actions";
+import {Footer} from "@views/footer";
+import {HandposeComponent} from "@views/handpose/handpose.component";
+import {useButtonActions} from "@controls/hooks";
 
 function App() {
   const buttonActions = useButtonActions();

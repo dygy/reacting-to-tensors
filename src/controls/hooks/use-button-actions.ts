@@ -13,7 +13,6 @@ export const useButtonActions = () => {
         }
     })
     const submitButton = debounce((which: "left" | "right") => {
-        console.log(which)
         setButtonState((prevState)=>({
             ...prevState,
         [which] : {

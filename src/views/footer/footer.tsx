@@ -1,6 +1,6 @@
 import styles from "./footer.module.css"
-import { Button } from "../../components/button/button";
-import { useButtonActions } from "../../controll/use-button-actions";
+import { Button } from "@components/button/button";
+import { useButtonActions } from "@controls/hooks";
 
 export const Footer = ({buttonActions}: {buttonActions: ReturnType<typeof useButtonActions>}) => {
   return (

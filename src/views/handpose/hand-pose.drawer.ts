@@ -1,7 +1,7 @@
 import { createDetector, SupportedModels } from "@tensorflow-models/hand-pose-detection"
 import { Gestures, GestureEstimator, GestureDescription } from "fingerpose"
 import { PixelInput } from "@tensorflow-models/hand-pose-detection/dist/shared/calculators/interfaces/common_interfaces";
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 
 let handler: null | React.Dispatch<any> = null;
 const config = {
@@ -151,7 +151,7 @@ function updateDebugInfo(data: GestureDescription[] | string[][], hand: string) 
     }
 }
 
-export const useFingersClicks = (video: HTMLVideoElement | null, canvas: HTMLCanvasElement | null) => {
+export const useFingersClicks = () => {
     const [clickedState, setClickedState] = useState<{
         clicked: boolean, hand: "left" | "right" | undefined
     }>({
@@ -159,24 +159,32 @@ export const useFingersClicks = (video: HTMLVideoElement | null, canvas: HTMLCan
         hand: undefined
     })
 
-    if (video && canvas && !handler) {
-        handler = setClickedState;
-        initCamera(video, config.video.width, config.video.height, config.video.fps).then(
-            (video) => {
-                video.play();
-                video.addEventListener("loadeddata", (event) => {
-                    console.log("Camera is ready");
-                    main(video, canvas);
-                });
-            }
-        );
 
-        if (canvas) {
-            canvas.width = config.video.width;
-            canvas.height = config.video.height;
+    useEffect(() => {
+        const [video, canvas] = [
+            document.getElementById("video") as HTMLVideoElement,
+            document.getElementById("canvas") as HTMLCanvasElement
+        ]
+
+        if (video && canvas && !handler) {
+            handler = setClickedState;
+            initCamera(video, config.video.width, config.video.height, config.video.fps).then(
+                (video) => {
+                    void video.play();
+                    video.addEventListener("loadeddata", (event) => {
+                        console.log("Camera is ready");
+                        void main(video, canvas);
+                    });
+                }
+            );
+
+            if (canvas) {
+                canvas.width = config.video.width;
+                canvas.height = config.video.height;
+            }
+            console.log("Canvas initialized");
         }
-        console.log("Canvas initialized");
-    }
+    }, []);
 
     return clickedState
 };
