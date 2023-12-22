@@ -1,1 +1,1 @@
-export * from "./handpose.component"
+export * from "./handpose.component";

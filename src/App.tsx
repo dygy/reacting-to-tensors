@@ -1,18 +1,17 @@
-import React from 'react';
-import './App.css';
-import {Footer} from "@views/footer";
-import {HandposeComponent} from "@features/handpose";
-import {useButtonActions} from "@controls/hooks";
+import React from "react";
+import "./App.css";
+import { Footer } from "@views/footer";
+import { HandposeComponent } from "@features/handpose";
+import { useButtonActions } from "@controls/hooks";
 
 function App() {
   const buttonActions = useButtonActions();
-
   return (
     <div className="App">
       <header className="App-header">
-          <HandposeComponent buttonActions={buttonActions} />
+        <HandposeComponent buttonActions={buttonActions} />
       </header>
-        <Footer buttonActions={buttonActions} />
+      <Footer buttonActions={buttonActions} />
     </div>
   );
 }
