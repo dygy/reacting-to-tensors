@@ -1,156 +1,158 @@
-import { createDetector, SupportedModels } from "@tensorflow-models/hand-pose-detection"
+import {Dispatch, SetStateAction, useEffect, useState} from "react";
+import {createDetector, HandDetector, SupportedModels} from "@tensorflow-models/hand-pose-detection"
 import { Gestures, GestureEstimator, GestureDescription } from "fingerpose"
-import { PixelInput } from "@tensorflow-models/hand-pose-detection/dist/shared/calculators/interfaces/common_interfaces";
-import React, {useEffect, useState} from "react";
+import type { PixelInput } from "@tensorflow-models/hand-pose-detection/dist/shared/calculators/interfaces/common_interfaces";
 
-let handler: null | React.Dispatch<any> = null;
-const config = {
-    video: { width: 640, height: 480, fps: 10 }
-};
+type StateDispatch = Dispatch<SetStateAction<{clicked: boolean;hand: "left" | "right" | undefined;}>>
+let handPoseDrawer: HandPoseDrawer | null = null;
 
-const landmarkColors = {
-    thumb: "red",
-    index: "blue",
-    middle: "yellow",
-    ring: "green",
-    pinky: "pink",
-    wrist: "white"
-};
-
-async function createDetectorLocal() {
-    return createDetector(
-        SupportedModels.MediaPipeHands,
-        {
-            runtime: "mediapipe",
-            modelType: "full",
-            maxHands: 2,
-            solutionPath: `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1646424915`
-        }
-    );
-}
-
-
-async function initCamera(video: HTMLVideoElement, width: number, height: number, fps: number): Promise<HTMLVideoElement> {
-    const constraints = {
-        audio: false,
-        video: {
-            facingMode: "user",
-            width,
-            height,
-            frameRate: { max: fps }
-        }
+class HandPoseDrawer {
+    private isClickStarted = {
+        left: false,
+        right: false
+    }
+    public config = {
+        video: { width: 640, height: 480, fps: 10 }
     };
+    private canvas: HTMLCanvasElement;
+    private video: HTMLVideoElement;
+    private knownGestures: GestureDescription[];
+    private handler: StateDispatch;
+    private worker: Worker;
 
-    video.width = width;
-    video.height = height;
-    // get video stream
-    video.srcObject = await navigator.mediaDevices.getUserMedia(constraints);
+    constructor(
+        video: HTMLVideoElement,
+        canvas: HTMLCanvasElement,
+        handler: StateDispatch
+    ) {
+        this.video = video;
+        this.canvas = canvas;
+        this.handler = handler
+        // configure gesture estimator
+        // add "✌🏻" and "👍" as sample gestures
+        this.knownGestures = [
+            Gestures.VictoryGesture,
+            Gestures.ThumbsUpGesture
+        ];
+        this.worker = new Worker(new URL("./worker.ts", import.meta.url));
+        this.worker.onmessage = (message) => {
+            console.log(message)
+        }
+        this.worker.postMessage({
+            message: "init",
+        })
 
+    }
 
-    return new Promise((resolve) => {
-        video.onloadedmetadata = () => {
-            resolve(video);
+    async initCamera(): Promise<HTMLVideoElement> {
+        const constraints = {
+            audio: false,
+            video: {
+                facingMode: "user",
+                video: this.video,
+                height: this.config.video.height,
+                frameRate: { max: this.config.video.fps }
+            }
         };
-    });
-}
 
-function drawPoint(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, color: string) {
-    ctx.beginPath();
-    ctx.arc(x, y, r, 0, 2 * Math.PI);
-    ctx.fillStyle = color;
-    ctx.fill();
-}
+        this.video.width = this.config.video.width;
+        this.video.height = this.config.video.height;
+        // get video stream
+        this.video.srcObject = await navigator.mediaDevices.getUserMedia(constraints);
 
-const isClickStarted = {
-    left: false,
-    right: false
-};
 
-async function main(video: HTMLVideoElement, canvas: HTMLCanvasElement) {
-    const ctx = canvas.getContext("2d");
+        return new Promise((resolve) => {
+            this.video.onloadedmetadata = () => {
+                resolve(this.video);
+                void this.main();
+            };
+        });
+    }
 
-    // configure gesture estimator
-    // add "✌🏻" and "👍" as sample gestures
-    const knownGestures = [
-        Gestures.VictoryGesture,
-        Gestures.ThumbsUpGesture
-    ];
-    const GE = new GestureEstimator(knownGestures);
-    // load handpose model
-    const detector = await createDetectorLocal();
-    console.log("mediaPose model loaded");
 
-    // main estimation loop
-    const estimateHands = async () => {
+    async estimateHands(
+        detector: HandDetector
+    ) {
         // clear canvas overlay
-        ctx?.clearRect(0, 0, config.video.width, config.video.height);
+        const ctx = this.canvas.getContext("2d");
+        if (ctx) {
+            const GE = new GestureEstimator(this.knownGestures);
+            ctx.clearRect(0, 0, this.config.video.width, this.config.video.height);
 
-        // get hand landmarks from video
-        if (video && ctx) {
-            const hands = await detector.estimateHands(video as PixelInput, {
-                flipHorizontal: true
-            });
+            // get hand landmarks from video
+                const hands = await detector.estimateHands(this.video as PixelInput, {
+                    flipHorizontal: true
+                });
 
-            for (const hand of hands) {
-                for (const keypoint of hand.keypoints) {
-                    const name = keypoint.name?.split("_")[0].toString().toLowerCase();
-                    if (name) {
-                        const color = landmarkColors[name];
-                        drawPoint(ctx, keypoint.x, keypoint.y, 3, color);
+                for (const hand of hands) {
+                    // @ts-ignore
+                    const est = GE.estimate(hand.keypoints3D, 9);
+                    if (est.gestures.length > 0) {
+                        // find gesture with the highest match score
+                        let result = est.gestures.reduce((p, c) => {
+                            return p.score > c.score ? p : c;
+                        });
+                        const chosenHand = hand.handedness.toLowerCase() as "left" | "right";
+                        this.updateDebugInfo(est.poseData, chosenHand);
                     }
                 }
-
-                // @ts-ignore
-                const est = GE.estimate(hand.keypoints3D, 9);
-                if (est.gestures.length > 0) {
-                    // find gesture with the highest match score
-                    let result = est.gestures.reduce((p, c) => {
-                        return p.score > c.score ? p : c;
-                    });
-                    const chosenHand = hand.handedness.toLowerCase();
-                    updateDebugInfo(est.poseData, chosenHand);
-                }
-            }
-            // ...and so on
+                // ...and so on
             setTimeout(() => {
-                estimateHands();
-            }, 1000 / config.video.fps);
+                void this.estimateHands(detector);
+                }, 1000 / this.config.video.fps);
         }
-    };
+    }
+    async main() {
+        // load handpose model
+        const detector = await this.createDetectorLocal();
+        console.log("mediaPose model loaded");
 
-    await estimateHands();
-    console.log("Starting predictions");
-}
-function updateDebugInfo(data: GestureDescription[] | string[][], hand: string) {
-    if (
-        data[2][1] === "Half Curl" &&
-        data[3][1] === "Half Curl" &&
-        !isClickStarted[hand]
-    ) {
-        isClickStarted[hand] = true;
-        console.log("click started");
+
+        await this.estimateHands(detector);
+        console.log("Starting predictions");
     }
 
-    if (
-        data[2][1] === "Full Curl" &&
-        data[3][1] === "Full Curl" &&
-        isClickStarted[hand]
-    ) {
-        isClickStarted[hand] = false;
-        handler?.({
-            clicked: true,
-            hand
-        })
-        setTimeout(()=> {
-            handler?.({
-                clicked: false,
-                hand: undefined
+    async createDetectorLocal() {
+        return createDetector(
+            SupportedModels.MediaPipeHands,
+            {
+                runtime: "mediapipe",
+                modelType: "full",
+                maxHands: 2,
+                solutionPath: `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1646424915`
+            }
+        );
+    }
+    updateDebugInfo(data: GestureDescription[] | string[][], hand: "left" | "right" ) {
+        if (
+            data[2][1] === "Half Curl" &&
+            data[3][1] === "Half Curl" &&
+            !this.isClickStarted[hand]
+        ) {
+            this.isClickStarted[hand] = true;
+            console.log("click started");
+        }
+
+        if (
+            data[2][1] === "Full Curl" &&
+            data[3][1] === "Full Curl" &&
+            this.isClickStarted[hand]
+        ) {
+            this.isClickStarted[hand] = false;
+            this.handler({
+                clicked: true,
+                hand
             })
-        }, 1000)
-        console.log("click ended");
+            setTimeout(()=> {
+                this.handler({
+                    clicked: false,
+                    hand: undefined
+                })
+            }, 1000)
+            console.log("click ended");
+        }
     }
 }
-
 export const useFingersClicks = () => {
     const [clickedState, setClickedState] = useState<{
         clicked: boolean, hand: "left" | "right" | undefined
@@ -166,21 +168,20 @@ export const useFingersClicks = () => {
             document.getElementById("canvas") as HTMLCanvasElement
         ]
 
-        if (video && canvas && !handler) {
-            handler = setClickedState;
-            initCamera(video, config.video.width, config.video.height, config.video.fps).then(
+        if (!handPoseDrawer) {
+            handPoseDrawer = new HandPoseDrawer(video, canvas, setClickedState)
+            handPoseDrawer.initCamera().then(
                 (video) => {
                     void video.play();
                     video.addEventListener("loadeddata", (event) => {
                         console.log("Camera is ready");
-                        void main(video, canvas);
                     });
                 }
             );
 
             if (canvas) {
-                canvas.width = config.video.width;
-                canvas.height = config.video.height;
+                canvas.width = handPoseDrawer.config.video.width;
+                canvas.height = handPoseDrawer.config.video.height;
             }
             console.log("Canvas initialized");
         }
