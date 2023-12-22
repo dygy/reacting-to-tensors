@@ -25,6 +25,7 @@ class HandPoseDrawer {
   private knownGestures: GestureDescription[];
   private handler: StateDispatch;
   private worker: Worker;
+  private GE: GestureEstimator;
 
   constructor(
     video: HTMLVideoElement,
@@ -37,6 +38,7 @@ class HandPoseDrawer {
     // configure gesture estimator
     // add "✌🏻" and "👍" as sample gestures
     this.knownGestures = [Gestures.VictoryGesture, Gestures.ThumbsUpGesture];
+    this.GE = new GestureEstimator(this.knownGestures);
     this.worker = new Worker(new URL("./worker.ts", import.meta.url));
     this.worker.onmessage = (message) => {
       console.log(message);
@@ -75,7 +77,6 @@ class HandPoseDrawer {
     // clear canvas overlay
     const ctx = this.canvas.getContext("2d");
     if (ctx) {
-      const GE = new GestureEstimator(this.knownGestures);
       ctx.clearRect(0, 0, this.config.video.width, this.config.video.height);
 
       // get hand landmarks from video
@@ -85,7 +86,7 @@ class HandPoseDrawer {
 
       for (const hand of hands) {
         // @ts-ignore
-        const est = GE.estimate(hand.keypoints3D, 9);
+        const est = this.GE.estimate(hand.keypoints3D, 9);
         if (est.gestures.length > 0) {
           // find gesture with the highest match score
           let result = est.gestures.reduce((p, c) => {
