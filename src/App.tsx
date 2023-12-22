@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import {Footer} from "@views/footer";
-import {HandposeComponent} from "@views/handpose/handpose.component";
+import {HandposeComponent} from "@features/handpose";
 import {useButtonActions} from "@controls/hooks";
 
 function App() {
