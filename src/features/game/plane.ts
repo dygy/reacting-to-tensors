@@ -52,6 +52,7 @@ export function usePlane(canvas: HTMLCanvasElement | void) {
       return;
     }
     app = new PIXI.Application({
+      backgroundAlpha: 0,
       background: "#282c34",
       resizeTo: window,
       view: canvas,
