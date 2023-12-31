@@ -1,5 +1,7 @@
-import styles from "./game.module.css";
 import classNames from "classnames";
+
+import styles from "./game.module.css";
+
 export const BackgroundComponent = () => {
   return (
     <div className={styles.content}>

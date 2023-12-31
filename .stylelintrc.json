@@ -1,0 +1,23 @@
+{
+  "extends": "stylelint-config-standard-scss",
+  "rules": {
+    "selector-id-pattern": [
+      "(^[a-z]|[A-Z0-9])[a-z]*",
+      {
+        "message": "Expected id selector to be camelCase"
+      }
+    ],
+    "selector-class-pattern": [
+      "(^[a-z]|[A-Z0-9])[a-z]*",
+      {
+        "message": "Expected class selector to be camelCase"
+      }
+    ],
+    "keyframes-name-pattern": [
+      "(^[a-z]|[A-Z0-9])[a-z]*",
+      {
+        "message": "Expected keyframe selector to be camelCase"
+      }
+    ]
+  }
+}

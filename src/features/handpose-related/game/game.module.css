@@ -62,15 +62,18 @@
 
 @keyframes dayToNight {
     0%		{
-        -webkit-filter: hue-rotate(0deg) brightness(1);
         filter: hue-rotate(0deg) brightness(1);
     }
+
     50% 	{
-        -webkit-filter: hue-rotate(180deg) brightness(0.1);
         filter: hue-rotate(180deg) brightness(0.1);
     }
+
     100%  {
-        -webkit-filter: hue-rotate(0deg) brightness(1);
         filter: hue-rotate(0deg) brightness(1);
     }
+}
+
+.canvas-tupo {
+    width: 30px;
 }
