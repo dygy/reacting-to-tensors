@@ -1,6 +1,8 @@
-import styles from "./button.module.css";
-import type { HTMLAttributes, PropsWithChildren } from "react";
 import classNames from "classnames";
+
+import type { HTMLAttributes, PropsWithChildren } from "react";
+
+import styles from "./button.module.css";
 type Props = PropsWithChildren<HTMLAttributes<HTMLButtonElement>> & {
   disabled?: boolean;
   loading?: boolean;
@@ -14,7 +16,7 @@ export const Button = ({ disabled, loading, ...props }: Props) => {
         [styles.loading]: loading,
       })}
     >
-      {loading ? "loading" : props.children}
+      {loading === true ? "loading" : props.children}
     </button>
   );
 };

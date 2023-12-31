@@ -1,11 +1,12 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   createDetector,
   HandDetector,
   SupportedModels,
 } from "@tensorflow-models/hand-pose-detection";
-import { Gestures, GestureEstimator, GestureDescription } from "fingerpose";
 import type { PixelInput } from "@tensorflow-models/hand-pose-detection/dist/shared/calculators/interfaces/common_interfaces";
+import { Gestures, GestureEstimator, GestureDescription } from "fingerpose";
+
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 type StateDispatch = Dispatch<
   SetStateAction<{ clicked: boolean; hand: "left" | "right" | undefined }>
@@ -85,13 +86,10 @@ class HandPoseDrawer {
       });
 
       for (const hand of hands) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         const est = this.GE.estimate(hand.keypoints3D, 9);
         if (est.gestures.length > 0) {
-          // find gesture with the highest match score
-          let result = est.gestures.reduce((p, c) => {
-            return p.score > c.score ? p : c;
-          });
           const chosenHand = hand.handedness.toLowerCase() as "left" | "right";
           this.updateDebugInfo(est.poseData, chosenHand);
         }
@@ -176,7 +174,7 @@ export const useFingersClicks = () => {
         });
       });
 
-      if (canvas) {
+      if (typeof canvas !== "undefined") {
         canvas.width = handPoseDrawer.config.video.width;
         canvas.height = handPoseDrawer.config.video.height;
       }

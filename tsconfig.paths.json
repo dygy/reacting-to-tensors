@@ -8,9 +8,6 @@
       "@controls/*": [
         "./controls/*"
       ],
-      "@views/*": [
-        "./views/*"
-      ],
       "@features/*": [
         "./features/*"
       ],

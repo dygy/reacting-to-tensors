@@ -30,13 +30,6 @@
     "test": "craco test",
     "eject": "craco eject"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest",
-      "plugin:prettier/recommended"
-    ]
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -53,6 +46,7 @@
     "@types/fingerpose": "^0.1.0",
     "@types/lodash": "^4.14.202",
     "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-prettier": "^5.1.1",
     "prettier": "3.1.1"
   }

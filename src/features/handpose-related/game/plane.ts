@@ -1,5 +1,6 @@
 import * as PIXI from "pixi.js";
 import { DisplayObject } from "pixi.js";
+
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 let plane: PIXI.DisplayObject | PIXI.AnimatedSprite,
@@ -25,10 +26,9 @@ export function usePlane(canvas: HTMLCanvasElement | void) {
     xDirection = direction;
   }
   useEffect(() => {
-    if (!plane) {
+    if (typeof plane === "undefined" || typeof app === "undefined") {
       return;
     }
-
     if (app.screen.width / xPosition > 5 && xDirection === "left") {
       xDirection = "none";
     }
@@ -106,7 +106,7 @@ function initPlane() {
 }
 
 const animationFunction = (sprite: PIXI.AnimatedSprite) => {
-  if (!sprite) {
+  if (sprite === undefined) {
     return;
   }
   reactSetters.setXPosition(sprite.x);
