@@ -32,14 +32,6 @@ export const GameComponent = () => {
       <link rel="prefetch" href={paperImage} />
       <link rel="prefetch" href={rockImage} />
       <div id="root" className={styles.container}>
-        <h3>Let's play Rock - Paper - Scissors </h3>
-
-        <p className={styles.instructions}>
-          After the countdown, show a hand gesture and hold it for a moment.
-          <br />
-          The computer will then make its move (don't worry, it doesn't cheat).
-        </p>
-
         <div className={styles.gameContainer}>
           <PlayerContainer
             ref={videoRef}

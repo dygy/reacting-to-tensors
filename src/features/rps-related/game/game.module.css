@@ -12,11 +12,6 @@
     text-align: center;
 }
 
-.instructions {
-    font-weight: 700;
-    margin: 24px 0 32px;
-}
-
 .gameContainer {
     max-width: 620px;
     display: flex;

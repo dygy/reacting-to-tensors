@@ -65,7 +65,7 @@ export const useGameHook = (videoRef: HTMLVideoElement | null) => {
     }
     setTimeout(() => {
       setNewMessage(STATUSES.READY);
-    }, 3000);
+    }, 1500);
   };
   const makeMove = (move: Move, isRobot?: boolean) => {
     let image = rockImage;
