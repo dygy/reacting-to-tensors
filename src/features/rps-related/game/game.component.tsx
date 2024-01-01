@@ -3,6 +3,8 @@ import {
   humanImage,
   paperImage,
   robotCamera,
+  robotLose,
+  robotWon,
   rockImage,
   scissorsImage,
 } from "@features/rps-related/game/assets";
@@ -13,7 +15,7 @@ import {
 } from "@features/rps-related/game/use-game.hook";
 import classNames from "classnames";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import styles from "./game.module.css";
 
@@ -26,8 +28,21 @@ export const GameComponent = () => {
       setVideoStream(videoRef.current);
     }
   }, []);
+  const robotPoster = useMemo(() => {
+    if (gameState.status === STATUSES.ROBOT_WON) {
+      return robotWon;
+    } else if (gameState.status === STATUSES.PLAYER_WON) {
+      return robotLose;
+    } else {
+      return robotCamera;
+    }
+  }, [gameState.status]);
+
   return (
     <>
+      <link rel="prefetch" href={robotWon} />
+      <link rel="prefetch" href={robotCamera} />
+      <link rel="prefetch" href={robotLose} />
       <link rel="prefetch" href={scissorsImage} />
       <link rel="prefetch" href={paperImage} />
       <link rel="prefetch" href={rockImage} />
@@ -45,7 +60,7 @@ export const GameComponent = () => {
           <PlayerContainer
             score={gameState.robot.score}
             name="Robot"
-            poster={robotCamera}
+            poster={robotPoster}
             moveImage={gameState.robot.image}
             isNotResolvedMove={false}
           />
