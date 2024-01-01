@@ -19,7 +19,7 @@ type GameState = Record<
 > & {
   status: string;
 };
-export const enum STATUSES {
+export enum STATUSES {
   LOADING = "Loading",
   START = "On your marks",
   READY = "Ready",
@@ -42,29 +42,12 @@ export const useGameHook = (videoRef: HTMLVideoElement | null) => {
   });
 
   const makeResults = (playerMove: Move, robotMove: Move) => {
-    if (playerMove === robotMove) {
+    const res = gameLogic(playerMove, robotMove);
+    if (res === 0) {
       setNewMessage(STATUSES.NONE);
     } else {
-      let key: "robot" | "player" = "robot";
-      if (robotMove === "paper" && playerMove === "rock") {
-        key = "robot";
-      }
-      if (robotMove === "paper" && playerMove === "scissors") {
-        key = "player";
-      }
-      if (robotMove === "scissors" && playerMove === "rock") {
-        key = "player";
-      }
-      if (robotMove === "scissors" && playerMove === "paper") {
-        key = "robot";
-      }
-      if (robotMove === "rock" && playerMove === "scissors") {
-        key = "robot";
-      }
-      if (robotMove === "rock" && playerMove === "paper") {
-        key = "player";
-      }
-      setNewMessage(key === "robot" ? STATUSES.ROBOT_WON : STATUSES.PLAYER_WON);
+      const key = res === 1 ? "player" : "robot";
+      setNewMessage(STATUSES[key.toUpperCase() + "_WON"]);
       setGameState((currentState) => ({
         ...currentState,
         ...{
@@ -177,4 +160,29 @@ function getRandomGesture(): Move {
   const gestures: Array<Move> = ["rock", "paper", "scissors"];
   const randomNum = Math.floor(Math.random() * gestures.length);
   return gestures[randomNum];
+}
+
+function gameLogic(firstValue: Move, secondValue: Move): 0 | 1 | 2 {
+  if (firstValue === secondValue) {
+    return 0;
+  }
+  if (firstValue === "paper" && secondValue === "rock") {
+    return 1;
+  }
+  if (firstValue === "scissors" && secondValue === "paper") {
+    return 1;
+  }
+  if (firstValue === "rock" && secondValue === "scissors") {
+    return 1;
+  }
+  if (firstValue === "paper" && secondValue === "scissors") {
+    return 2;
+  }
+  if (firstValue === "scissors" && secondValue === "rock") {
+    return 2;
+  }
+  if (firstValue === "rock" && secondValue === "paper") {
+    return 2;
+  }
+  return 0;
 }
