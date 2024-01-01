@@ -10,6 +10,7 @@ import {
   Move,
 } from "@features/rps-related/game/game.utils";
 import { handPoseDrawer } from "@features/rps-related/handpose/hand-pose.drawer";
+import { debounce } from "lodash";
 
 import { useEffect, useState } from "react";
 
@@ -23,10 +24,10 @@ type GameState = Record<
 > & {
   status: string;
 };
+
 export enum STATUSES {
   LOADING = "Loading",
-  START = "On your marks",
-  READY = "Ready",
+  READY = "Are you ready?",
   PLAY = "Show your hand!",
   NONE = "No one won this time",
   PLAYER_WON = "Player won this time",
@@ -62,6 +63,9 @@ export const useGameHook = (videoRef: HTMLVideoElement | null) => {
         },
       }));
     }
+    setTimeout(() => {
+      setNewMessage(STATUSES.READY);
+    }, 3000);
   };
   const makeMove = (move: Move, isRobot?: boolean) => {
     let image = rockImage;
@@ -150,12 +154,28 @@ export const useGameHook = (videoRef: HTMLVideoElement | null) => {
     if (videoRef) {
       Promise.all([initPlayerVideo(videoRef), handPoseDrawer.init()]).then(
         () => {
-          setNewMessage(STATUSES.START);
-          detectPlayerGesture(150);
+          setNewMessage(STATUSES.READY);
         },
       );
     }
   }, [videoRef]);
 
-  return { gameState, makeMove };
+  const setReady = debounce(() => {
+    if (gameState.status === STATUSES.READY) {
+      setGameState((currentState) => ({
+        ...currentState,
+        player: {
+          ...currentState.player,
+          image: undefined,
+        },
+        robot: {
+          ...currentState.robot,
+          image: undefined,
+        },
+      }));
+      detectPlayerGesture(1000);
+    }
+  }, 300);
+
+  return { gameState, makeMove, setReady };
 };

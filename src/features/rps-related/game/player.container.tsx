@@ -1,5 +1,6 @@
 import { humanImage } from "@features/rps-related/game/assets";
 import styles from "@features/rps-related/game/game.module.css";
+import classNames from "classnames";
 
 import { forwardRef, Ref } from "react";
 
@@ -8,9 +9,13 @@ type Props = {
   name: string;
   poster: typeof humanImage;
   moveImage: string | undefined;
+  isNotResolvedMove: boolean;
 };
 export const PlayerContainer = forwardRef(
-  ({ score, name, poster, moveImage }: Props, ref: Ref<HTMLVideoElement>) => {
+  (
+    { score, name, poster, moveImage, isNotResolvedMove }: Props,
+    ref: Ref<HTMLVideoElement>,
+  ) => {
     return (
       <div className={styles.player}>
         <h2 className={styles.playerHeadline}>
@@ -27,7 +32,11 @@ export const PlayerContainer = forwardRef(
             playsInline
           />
 
-          <div className={styles.playerHandContainer}>
+          <div
+            className={classNames(styles.playerHandContainer, {
+              [styles.fadeInOut]: isNotResolvedMove,
+            })}
+          >
             {moveImage != null && (
               <>
                 <img className={styles.playerHand} src={moveImage} />

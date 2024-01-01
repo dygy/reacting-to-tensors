@@ -38,12 +38,17 @@
 }
 
 .player {
+    border-radius: 8px;
     margin: 6px;
     width: calc(50% - 12px);
     background-color: #555;
 }
 
 .messages {
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin: 6px;
     padding: 12px;
     width: calc(100% - 12px);
