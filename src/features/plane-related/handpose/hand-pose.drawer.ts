@@ -1,9 +1,6 @@
 import { initPlayerVideo } from "@controls/camera";
-import {
-  createDetector,
-  HandDetector,
-  SupportedModels,
-} from "@tensorflow-models/hand-pose-detection";
+import { createDetectorLocal } from "@controls/tensorflow";
+import { HandDetector } from "@tensorflow-models/hand-pose-detection";
 import type { PixelInput } from "@tensorflow-models/hand-pose-detection/dist/shared/calculators/interfaces/common_interfaces";
 import { Gestures, GestureEstimator, GestureDescription } from "fingerpose";
 
@@ -53,22 +50,14 @@ class HandPoseDrawer {
       void this.estimateHands(detector);
     }, 1000 / 30);
   }
-  async main() {
-    const detector = await this.createDetectorLocal();
+  async init() {
+    const detector = await createDetectorLocal();
     console.log("mediaPose model loaded");
 
     await this.estimateHands(detector);
     console.log("Starting predictions");
   }
 
-  async createDetectorLocal() {
-    return createDetector(SupportedModels.MediaPipeHands, {
-      runtime: "mediapipe",
-      modelType: "full",
-      maxHands: 2,
-      solutionPath: `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1646424915`,
-    });
-  }
   updateDebugInfo(data: GestureDescription[] | string[][], hand: Hand) {
     if (
       data[2][1] === "Half Curl" &&
@@ -113,7 +102,7 @@ export const useFingersClicks = () => {
     if (!handPoseDrawer) {
       handPoseDrawer = new HandPoseDrawer(video, setClickedState);
       void initPlayerVideo(video).then(() => {
-        handPoseDrawer?.main();
+        handPoseDrawer?.init();
       });
     }
   }, []);

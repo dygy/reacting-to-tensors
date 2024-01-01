@@ -1,9 +1,6 @@
 import "@tensorflow/tfjs-backend-webgl";
-import {
-  createDetector,
-  HandDetector,
-  SupportedModels,
-} from "@tensorflow-models/hand-pose-detection";
+import { createDetectorLocal } from "@controls/tensorflow";
+import { HandDetector } from "@tensorflow-models/hand-pose-detection";
 import type { PixelInput } from "@tensorflow-models/hand-pose-detection/dist/shared/calculators/interfaces/common_interfaces";
 import { GestureDescription, GestureEstimator } from "fingerpose";
 
@@ -22,16 +19,7 @@ class HandPoseDrawer {
 
   async init() {
     // initialize finger gesture recognizer with known gestures
-    this.detector = await this.createDetectorLocal();
-  }
-
-  async createDetectorLocal() {
-    return createDetector(SupportedModels.MediaPipeHands, {
-      runtime: "mediapipe",
-      modelType: "full",
-      maxHands: 2,
-      solutionPath: `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1646424915`,
-    });
+    this.detector = await createDetectorLocal();
   }
 
   async predictGesture(sourceElement: HTMLVideoElement, minimumScore: number) {
