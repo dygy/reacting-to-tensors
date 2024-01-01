@@ -1,0 +1,120 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size:  1rem;
+    font-family:  'Courier New', Courier, monospace;
+    background: #0f0c29;
+    background: linear-gradient(to left, cornflowerblue, indigo, blueviolet);
+    color:  #dae0e0;
+    height: calc(100vh - 33px);
+    text-align: center;
+}
+
+.instructions {
+    font-weight: 700;
+    margin: 24px 0 32px;
+}
+
+.gameContainer {
+    max-width: 620px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    margin: -6px auto;
+}
+
+.playerHeadline {
+    display: flex;
+    justify-content: space-between;
+    color: #61dafb;
+
+    .nick,
+    .score {
+        font-size: 24px;
+        padding: 0 24px;
+    }
+}
+
+.player {
+    margin: 6px;
+    width: calc(50% - 12px);
+    background-color: #555;
+}
+
+.messages {
+    margin: 6px;
+    padding: 12px;
+    width: calc(100% - 12px);
+    background-color: #555;
+}
+
+.messageText {
+    font-weight: 700;
+}
+
+.fadeInOut {
+    animation: fadeInOut 1s;
+    animation-iteration-count: infinite;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 1; }
+    50% { opacity: 0.2; }
+    100% { opacity:1; }
+}
+
+.playerContainer,
+.robotContainer {
+    position: relative;
+}
+
+.playerContainer .playerVideo {
+    min-height: 300px;
+    width: 100%;
+    object-fit: cover;
+    transform: scaleX(-1);
+    display: block;
+}
+
+.avatar {
+    width: 100%;
+    display: block;
+}
+
+.playerHandContainer {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    top: 0;
+    right: 0;
+}
+
+.playerHand, .robotHand {
+    position: absolute;
+    top: 15px;
+    right: 13px;
+    width: 73px;
+    height: 70px;
+    line-height: 100px;
+    border-radius: 50px;
+}
+
+.playerHandZoom {
+    animation: handZoom .5s;
+    animation-iteration-count: 1;
+}
+
+@keyframes handZoom {
+    0% { font-size: 42px; }
+    50% { font-size: 64px; }
+    100% { font-size: 42px; }
+}
+
+.timerRingCircle {
+    transition: stroke-dashoffset 0.1s;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+    color: #61dafb;
+}

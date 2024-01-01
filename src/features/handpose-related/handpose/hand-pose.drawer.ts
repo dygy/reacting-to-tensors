@@ -23,10 +23,12 @@ class HandPoseDrawer {
   };
   private canvas: HTMLCanvasElement;
   private video: HTMLVideoElement;
-  private knownGestures: GestureDescription[];
+  private knownGestures: GestureDescription[] = [
+    Gestures.VictoryGesture,
+    Gestures.ThumbsUpGesture,
+  ];
   private handler: StateDispatch;
-  private worker: Worker;
-  private GE: GestureEstimator;
+  private GE: GestureEstimator = new GestureEstimator(this.knownGestures);
 
   constructor(
     video: HTMLVideoElement,
@@ -36,17 +38,6 @@ class HandPoseDrawer {
     this.video = video;
     this.canvas = canvas;
     this.handler = handler;
-    // configure gesture estimator
-    // add "✌🏻" and "👍" as sample gestures
-    this.knownGestures = [Gestures.VictoryGesture, Gestures.ThumbsUpGesture];
-    this.GE = new GestureEstimator(this.knownGestures);
-    this.worker = new Worker(new URL("./worker.ts", import.meta.url));
-    this.worker.onmessage = (message) => {
-      console.log(message);
-    };
-    this.worker.postMessage({
-      message: "init",
-    });
   }
 
   async initCamera(): Promise<HTMLVideoElement> {

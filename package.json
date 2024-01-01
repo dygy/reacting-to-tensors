@@ -5,6 +5,8 @@
   "dependencies": {
     "@craco/craco": "^5.9.0",
     "@tensorflow-models/hand-pose-detection": "^2.0.1",
+    "@tensorflow/tfjs-backend-webgl": "^4.15.0",
+    "@tensorflow/tfjs-converter": "^4.15.0",
     "@tensorflow/tfjs-core": "^4.15.0",
     "@testing-library/jest-dom": "5.17.0",
     "@testing-library/react": "13.4.0",
@@ -27,6 +29,7 @@
   },
   "scripts": {
     "start": "serve -s build",
+    "dev": "craco start",
     "build": "craco build",
     "test": "craco test",
     "eject": "craco eject"
