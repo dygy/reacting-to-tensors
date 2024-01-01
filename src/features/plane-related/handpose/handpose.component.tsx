@@ -1,4 +1,4 @@
-import { GameStateContext } from "@features/handpose-related/game-state.provider";
+import { GameStateContext } from "@features/plane-related/game-state.provider";
 
 import { useContext, useEffect } from "react";
 
@@ -18,7 +18,6 @@ export const HandposeComponent = () => {
   return (
     <div>
       <video id="video" className={styles.layer} playsInline />
-      <canvas id="canvas" className={styles.layer} />
     </div>
   );
 };

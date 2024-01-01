@@ -1,9 +1,9 @@
+import { initPlayerVideo } from "@controls/camera";
 import {
   paperImage,
   rockImage,
   scissorsImage,
 } from "@features/rps-related/game/assets";
-import config from "@features/rps-related/game/config";
 import { handPoseDrawer } from "@features/rps-related/handpose/hand-pose.drawer";
 
 import { useEffect, useState } from "react";
@@ -185,21 +185,6 @@ export const useGameHook = (videoRef: HTMLVideoElement | null) => {
   }, [videoRef]);
 
   return { gameState, makeMove };
-};
-
-const initPlayerVideo = async (playerRef: HTMLVideoElement) => {
-  // get cam video stream
-  playerRef.srcObject = await navigator.mediaDevices.getUserMedia(config);
-
-  return new Promise((resolve) => {
-    playerRef.onloadedmetadata = () => {
-      playerRef.onloadeddata = () => {
-        playerRef.play().then(() => {
-          resolve(playerRef);
-        });
-      };
-    };
-  });
 };
 
 function getRandomGesture(): Move {

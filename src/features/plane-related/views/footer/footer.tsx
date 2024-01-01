@@ -1,5 +1,5 @@
 import { Button } from "@components/button/button";
-import { GameStateContext } from "@features/handpose-related/game-state.provider";
+import { GameStateContext } from "@features/plane-related/game-state.provider";
 
 import { useContext } from "react";
 

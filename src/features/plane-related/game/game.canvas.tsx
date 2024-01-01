@@ -1,6 +1,6 @@
-import { BackgroundComponent } from "@features/handpose-related/game/background.component";
-import { usePlane } from "@features/handpose-related/game/plane";
-import { GameStateContext } from "@features/handpose-related/game-state.provider";
+import { BackgroundComponent } from "@features/plane-related/game/background.component";
+import { usePlane } from "@features/plane-related/game/plane";
+import { GameStateContext } from "@features/plane-related/game-state.provider";
 
 import { useContext, useEffect, useRef, useState } from "react";
 
