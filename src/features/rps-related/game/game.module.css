@@ -65,8 +65,7 @@
     100% { opacity:1; }
 }
 
-.playerContainer,
-.robotContainer {
+.playerContainer {
     position: relative;
 }
 
@@ -91,7 +90,7 @@
     right: 0;
 }
 
-.playerHand, .robotHand {
+.playerHand {
     position: absolute;
     top: 15px;
     right: 13px;

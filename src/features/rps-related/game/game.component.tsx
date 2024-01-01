@@ -1,10 +1,11 @@
 import {
   humanImage,
   paperImage,
-  robotCamer,
+  robotCamera,
   rockImage,
   scissorsImage,
 } from "@features/rps-related/game/assets";
+import { PlayerContainer } from "@features/rps-related/game/player.container";
 import { useGameHook } from "@features/rps-related/game/use-game.hook";
 import classNames from "classnames";
 
@@ -36,92 +37,20 @@ export const GameComponent = () => {
         </p>
 
         <div className={styles.gameContainer}>
-          <div className={styles.player}>
-            <h2 className={styles.playerHeadline}>
-              <span className={styles.nick}>Human</span>
-              <span className={styles.score}>{gameState.player.score}</span>
-            </h2>
-            <div className={styles.playerContainer}>
-              <video
-                id="video"
-                width={150}
-                height={150}
-                ref={videoRef}
-                className={styles.playerVideo}
-                poster={humanImage}
-                playsInline
-              />
+          <PlayerContainer
+            ref={videoRef}
+            score={gameState.player.score}
+            name="Player"
+            poster={humanImage}
+            moveImage={gameState.player.image}
+          />
 
-              <div className={styles.playerHandContainer}>
-                <img
-                  className={styles.playerHand}
-                  src={gameState.player.image}
-                />
-                <svg height="100" width="100">
-                  <circle
-                    className={styles.timerRingCircle}
-                    strokeWidth="6"
-                    stroke="currentColor"
-                    fill="transparent"
-                    r="38"
-                    cx="50"
-                    cy="50"
-                  />
-                  <circle
-                    className={styles.timerRingCircle}
-                    strokeWidth="6"
-                    stroke="currentColor"
-                    fill="transparent"
-                    r="38"
-                    cx="50"
-                    cy="50"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <div className={styles.player}>
-            <h2 className={styles.playerHeadline}>
-              <span className={styles.nick}>Robot</span>
-              <span className={styles.score}>{gameState.robot.score}</span>
-            </h2>
-            <div className={styles.robotContainer}>
-              <div className={styles.playerHandContainer}>
-                <img
-                  className={styles.playerHand}
-                  src={gameState.robot.image}
-                />
-                <svg height="100" width="100">
-                  <circle
-                    className={styles.timerRingCircle}
-                    strokeWidth="6"
-                    stroke="currentColor"
-                    fill="transparent"
-                    r="38"
-                    cx="50"
-                    cy="50"
-                  />
-                  <circle
-                    className={styles.timerRingCircle}
-                    strokeWidth="6"
-                    stroke="currentColor"
-                    fill="transparent"
-                    r="38"
-                    cx="50"
-                    cy="50"
-                  />
-                </svg>
-              </div>
-
-              <img className={styles.avatar} src={robotCamer} alt="" />
-              <img
-                className={styles.robotHand}
-                alt=""
-                src={gameState.robot.image}
-              />
-            </div>
-          </div>
+          <PlayerContainer
+            score={gameState.robot.score}
+            name="Robot"
+            poster={robotCamera}
+            moveImage={gameState.robot.image}
+          />
 
           <div className={styles.messages}>
             <span className={classNames(styles.messages, styles.fadeInOut)}>
