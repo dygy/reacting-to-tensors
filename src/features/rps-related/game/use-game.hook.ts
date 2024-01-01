@@ -45,41 +45,34 @@ export const useGameHook = (videoRef: HTMLVideoElement | null) => {
     if (playerMove === robotMove) {
       setNewMessage(STATUSES.NONE);
     } else {
-      let won: "robot" | "player" = "robot";
+      let key: "robot" | "player" = "robot";
       if (robotMove === "paper" && playerMove === "rock") {
-        won = "robot";
+        key = "robot";
       }
       if (robotMove === "paper" && playerMove === "scissors") {
-        won = "player";
+        key = "player";
       }
       if (robotMove === "scissors" && playerMove === "rock") {
-        won = "player";
+        key = "player";
       }
       if (robotMove === "scissors" && playerMove === "paper") {
-        won = "robot";
+        key = "robot";
       }
       if (robotMove === "rock" && playerMove === "scissors") {
-        won = "robot";
+        key = "robot";
       }
       if (robotMove === "rock" && playerMove === "paper") {
-        won = "player";
+        key = "player";
       }
-      setNewMessage(won === "robot" ? STATUSES.ROBOT_WON : STATUSES.PLAYER_WON);
+      setNewMessage(key === "robot" ? STATUSES.ROBOT_WON : STATUSES.PLAYER_WON);
       setGameState((currentState) => ({
         ...currentState,
-        ...(won === "robot"
-          ? {
-              robot: {
-                ...currentState.robot,
-                score: currentState.robot.score + 1,
-              },
-            }
-          : {
-              player: {
-                ...currentState.player,
-                score: currentState.player.score + 1,
-              },
-            }),
+        ...{
+          [key]: {
+            ...currentState[key],
+            score: currentState[key].score + 1,
+          },
+        },
       }));
     }
   };
@@ -97,26 +90,19 @@ export const useGameHook = (videoRef: HTMLVideoElement | null) => {
         break;
     }
     setGameState((currentState) => {
+      const key = isRobot === true ? "robot" : "player";
       if (isRobot === true) {
         makeResults(currentState.player.moves[0], move);
       }
       return {
         ...currentState,
-        ...(isRobot === true
-          ? {
-              robot: {
-                score: gameState.robot.score,
-                moves: [move, ...gameState.robot.moves],
-                image,
-              },
-            }
-          : {
-              player: {
-                score: gameState.player.score,
-                moves: [move, ...gameState.player.moves],
-                image,
-              },
-            }),
+        ...{
+          [key]: {
+            ...gameState[key],
+            moves: [move, ...gameState[key].moves],
+            image,
+          },
+        },
       };
     });
   };
