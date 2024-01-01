@@ -4,11 +4,15 @@ import {
   rockImage,
   scissorsImage,
 } from "@features/rps-related/game/assets";
+import {
+  gameLogic,
+  getRandomMove,
+  Move,
+} from "@features/rps-related/game/game.utils";
 import { handPoseDrawer } from "@features/rps-related/handpose/hand-pose.drawer";
 
 import { useEffect, useState } from "react";
 
-type Move = "rock" | "paper" | "scissors";
 type GameState = Record<
   "player" | "robot",
   {
@@ -126,7 +130,7 @@ export const useGameHook = (videoRef: HTMLVideoElement | null) => {
             predictNonblocking();
           } else {
             // let computer make its move
-            const computerGesture = getRandomGesture();
+            const computerGesture = getRandomMove();
             makeMove(computerGesture, true);
           }
         });
@@ -155,34 +159,3 @@ export const useGameHook = (videoRef: HTMLVideoElement | null) => {
 
   return { gameState, makeMove };
 };
-
-function getRandomGesture(): Move {
-  const gestures: Array<Move> = ["rock", "paper", "scissors"];
-  const randomNum = Math.floor(Math.random() * gestures.length);
-  return gestures[randomNum];
-}
-
-function gameLogic(firstValue: Move, secondValue: Move): 0 | 1 | 2 {
-  if (firstValue === secondValue) {
-    return 0;
-  }
-  if (firstValue === "paper" && secondValue === "rock") {
-    return 1;
-  }
-  if (firstValue === "scissors" && secondValue === "paper") {
-    return 1;
-  }
-  if (firstValue === "rock" && secondValue === "scissors") {
-    return 1;
-  }
-  if (firstValue === "paper" && secondValue === "scissors") {
-    return 2;
-  }
-  if (firstValue === "scissors" && secondValue === "rock") {
-    return 2;
-  }
-  if (firstValue === "rock" && secondValue === "paper") {
-    return 2;
-  }
-  return 0;
-}
