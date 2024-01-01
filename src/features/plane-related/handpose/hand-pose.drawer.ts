@@ -88,7 +88,7 @@ class HandPoseDrawer {
     }
   }
 }
-export const useFingersClicks = () => {
+export const useFingersClicks = (videoStream: HTMLVideoElement | null) => {
   const [clickedState, setClickedState] = useState<{
     clicked: boolean;
     hand?: Hand;
@@ -97,15 +97,13 @@ export const useFingersClicks = () => {
   });
 
   useEffect(() => {
-    const video = document.getElementById("video") as HTMLVideoElement;
-
-    if (!handPoseDrawer) {
-      handPoseDrawer = new HandPoseDrawer(video, setClickedState);
-      void initPlayerVideo(video).then(() => {
+    if (!handPoseDrawer && videoStream) {
+      handPoseDrawer = new HandPoseDrawer(videoStream, setClickedState);
+      void initPlayerVideo(videoStream).then(() => {
         handPoseDrawer?.init();
       });
     }
-  }, []);
+  }, [videoStream]);
 
   return clickedState;
 };
