@@ -6,7 +6,7 @@
     font-size:  1rem;
     font-family:  'Courier New', Courier, monospace;
     background: #0f0c29;
-    background: linear-gradient(to left, cornflowerblue, indigo, blueviolet);
+    background: linear-gradient(to left, #61dafb, #2cb4d9, #055d75);
     color:  #dae0e0;
     height: calc(100vh - 33px);
     text-align: center;
@@ -66,15 +66,23 @@
 }
 
 .playerContainer {
+    padding: 10px;
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .playerContainer .playerVideo {
-    min-height: 300px;
-    width: 100%;
+    height: 280px;
+    width: 280px;
     object-fit: cover;
     transform: scaleX(-1);
     display: block;
+    border-radius: 100%;
+    border: 5px #61dafb solid;
+    box-sizing: border-box;
+    box-shadow: 1px 1px 11px 3px #dae0e0;
 }
 
 .avatar {
