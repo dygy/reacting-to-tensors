@@ -51,7 +51,11 @@ export const GameComponent = () => {
           />
 
           <div className={styles.messages}>
-            <span className={classNames(styles.messages, styles.fadeInOut)}>
+            <span
+              className={classNames(styles.messages, {
+                [styles.fadeInOut]: gameState.status === STATUSES.PLAY,
+              })}
+            >
               {gameState.status}
             </span>
           </div>
