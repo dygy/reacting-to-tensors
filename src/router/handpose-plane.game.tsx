@@ -9,9 +9,7 @@ import React from "react";
 function HandposePlaneGame() {
   return (
     <div className="App">
-      <header className="App-header">
-        <NavigationComponent />
-      </header>
+      <NavigationComponent />
       <GameStateProvider>
         <GameCanvas />
         <HandposeComponent />
