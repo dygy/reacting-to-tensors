@@ -1,8 +1,13 @@
 import { initPlayerVideo } from "@controls/camera";
 import { createDetectorLocal } from "@controls/tensorflow";
+import {
+  FullSnapEndGesture,
+  FullSnapStartGesture,
+  HalfSnapEndGesture,
+} from "@features/plane-related/handpose/gesture.inits";
 import { HandDetector } from "@tensorflow-models/hand-pose-detection";
 import type { PixelInput } from "@tensorflow-models/hand-pose-detection/dist/shared/calculators/interfaces/common_interfaces";
-import { Gestures, GestureEstimator, GestureDescription } from "fingerpose";
+import { GestureEstimator, GestureDescription } from "fingerpose";
 
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
@@ -19,8 +24,10 @@ class HandPoseDrawer {
   };
   private video: HTMLVideoElement;
   private knownGestures: GestureDescription[] = [
-    Gestures.VictoryGesture,
-    Gestures.ThumbsUpGesture,
+    FullSnapStartGesture,
+    FullSnapEndGesture,
+    HalfSnapEndGesture,
+    HalfSnapEndGesture,
   ];
   private handler: StateDispatch;
   private GE: GestureEstimator = new GestureEstimator(this.knownGestures);
@@ -39,13 +46,16 @@ class HandPoseDrawer {
     for (const hand of hands) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      const est = this.GE.estimate(hand.keypoints3D, 9);
-      if (est.gestures.length > 0) {
-        const chosenHand = hand.handedness.toLowerCase() as Hand;
-        this.updateDebugInfo(est.poseData, chosenHand);
+      const gestureEstimations = this.GE.estimate(hand.keypoints3D, 9);
+      const chosenHand = hand.handedness.toLowerCase() as Hand;
+      if (gestureEstimations.gestures.length > 0) {
+        const gestureResult = gestureEstimations.gestures.reduce((p, c) => {
+          return p.score > c.score ? p : c;
+        });
+        this.makeResult(gestureResult.name, chosenHand);
       }
     }
-    // ...and so on
+
     setTimeout(() => {
       void this.estimateHands(detector);
     }, 1000 / 30);
@@ -58,10 +68,9 @@ class HandPoseDrawer {
     console.log("Starting predictions");
   }
 
-  updateDebugInfo(data: GestureDescription[] | string[][], hand: Hand) {
+  makeResult(poseName: string, hand: Hand) {
     if (
-      data[2][1] === "Half Curl" &&
-      data[3][1] === "Half Curl" &&
+      ["full-snap-start", "half-snap-start"].includes(poseName) &&
       !this.isClickStarted[hand]
     ) {
       this.isClickStarted[hand] = true;
@@ -69,8 +78,7 @@ class HandPoseDrawer {
     }
 
     if (
-      data[2][1] === "Full Curl" &&
-      data[3][1] === "Full Curl" &&
+      ["full-snap-end", "half-snap-end"].includes(poseName) &&
       this.isClickStarted[hand]
     ) {
       this.isClickStarted[hand] = false;

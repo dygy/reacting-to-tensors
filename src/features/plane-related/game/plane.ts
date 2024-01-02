@@ -34,7 +34,6 @@ export function usePlane(canvas: HTMLCanvasElement | void) {
     }
 
     if (app.screen.width / xPosition < 1.3 && xDirection === "right") {
-      console.log(app.screen.width / xPosition);
       xDirection = "none";
     }
 
