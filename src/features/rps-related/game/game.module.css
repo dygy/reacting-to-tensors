@@ -122,10 +122,10 @@
     color: #61dafb;
 }
 
-.won {
+.focus {
     box-shadow: #61dafb 1px 1px;
     text-shadow: #61dafb 1px 1px;
-    animation: infinite linear won 0.7s;
+    animation: infinite linear focus 0.7s;
 }
 
 @keyframes fadeInOut {
@@ -134,19 +134,19 @@
     100% { opacity:1; }
 }
 
-@keyframes won {
+@keyframes focus {
     0% {
-        box-shadow: inset #61dafb 1px 1px 3px 2px;
-        text-shadow: #61dafb 1px 1px 3px;
+        box-shadow: inset #94e1f6 1px 1px 3px 2px;
+        text-shadow: #94e1f6 1px 1px 3px;
     }
 
     50% {
-        box-shadow: inset #61dafb 1px 1px 15px 7px;
+        box-shadow: inset #2cb4d9 1px 1px 15px 7px;
         text-shadow: #2cb4d9 1px 1px 13px;
     }
 
     100% {
-        box-shadow: inset #61dafb 1px 1px 20px 10px;
+        box-shadow: inset #055d75 1px 1px 20px 10px;
         text-shadow: #055d75 1px 1px 20px;
     }
 }

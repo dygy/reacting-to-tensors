@@ -83,6 +83,9 @@ export const GameComponent = () => {
           </div>
           <div className={styles.messages}>
             <Button
+              className={classNames({
+                [styles.focus]: gameState.status === STATUSES.READY,
+              })}
               onClick={setReady}
               disabled={gameState.status !== STATUSES.READY}
             >

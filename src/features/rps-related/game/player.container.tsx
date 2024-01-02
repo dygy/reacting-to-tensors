@@ -20,7 +20,7 @@ export const PlayerContainer = forwardRef(
     return (
       <div
         className={classNames(styles.player, {
-          [styles.won]: isWon,
+          [styles.focus]: isWon,
         })}
       >
         <h2 className={styles.playerHeadline}>

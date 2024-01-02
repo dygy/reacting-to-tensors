@@ -11,10 +11,14 @@ export const Button = ({ disabled, loading, ...props }: Props) => {
   return (
     <button
       {...props}
-      className={classNames(styles.button, {
-        [styles.disabled]: disabled,
-        [styles.loading]: loading,
-      })}
+      className={classNames(
+        styles.button,
+        {
+          [styles.disabled]: disabled,
+          [styles.loading]: loading,
+        },
+        props.className,
+      )}
     >
       {loading === true ? "loading" : props.children}
     </button>
