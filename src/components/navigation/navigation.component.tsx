@@ -1,4 +1,5 @@
 import { routes } from "@base/router";
+import classNames from "classnames";
 
 import styles from "./navigation.module.css";
 
@@ -9,10 +10,14 @@ export const NavigationComponent = () => {
         <ul className={styles.navContainer}>
           {routes.map((route) => {
             return (
-              <a className={styles.href} href={route.path}>
-                <li key={route.id} className={styles.navItem}>
-                  {route.id}
-                </li>
+              <a
+                key={route.id}
+                className={classNames(styles.href, {
+                  [styles.active]: window.location.pathname === route.path,
+                })}
+                href={route.path}
+              >
+                <li className={styles.navItem}>{route.id}</li>
               </a>
             );
           })}

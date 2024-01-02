@@ -1,3 +1,4 @@
+import { EyeContactasinoGame } from "@base/router/eye-contactasino.game";
 import HandposePlaneGame from "@base/router/handpose-plane.game";
 import { MainPage } from "@base/router/main.page";
 import { RockPaperScissorsGame } from "@base/router/rock-paper-scissors.game";
@@ -18,6 +19,11 @@ export const routes = [
     path: "/rock-paper-scissors",
     element: <RockPaperScissorsGame />,
     id: "rock paper scissors",
+  },
+  {
+    path: "/eye-contactasino",
+    element: <EyeContactasinoGame />,
+    id: "eye contactasino",
   },
 ];
 export const router = createBrowserRouter(routes);
