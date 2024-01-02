@@ -8,7 +8,7 @@ import React from "react";
 
 function HandposePlaneGame() {
   return (
-    <div className="App">
+    <div>
       <NavigationComponent />
       <GameStateProvider>
         <GameCanvas />
