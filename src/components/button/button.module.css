@@ -4,10 +4,10 @@
     align-items: center;
     padding: 8px 12px;
     background: #61dafb;
-    color: dimgray;
+    color: #555;
     border-radius: 8px;
     border: none;
-    box-shadow: 1px 1px 10px midnightblue;
+    box-shadow: 1px 1px 10px #055d75;
     width: 150px;
     font-size: 20px;
     height: 80px;
@@ -16,11 +16,11 @@
 }
 
 .disabled {
-    background: dimgray;
+    background: #555;
     color: #61dafb;
 }
 
 .loading {
-    background: navy;
-    color: azure;
+    background: #055d75;
+    color: #94e1f6;
 }
