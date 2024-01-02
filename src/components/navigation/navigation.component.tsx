@@ -9,11 +9,11 @@ export const NavigationComponent = () => {
         <ul className={styles.navContainer}>
           {routes.map((route) => {
             return (
-              <li key={route.id} className={styles.navItem}>
-                <a className={styles.href} href={route.path}>
+              <a className={styles.href} href={route.path}>
+                <li key={route.id} className={styles.navItem}>
                   {route.id}
-                </a>
-              </li>
+                </li>
+              </a>
             );
           })}
         </ul>
