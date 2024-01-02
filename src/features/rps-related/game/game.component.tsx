@@ -4,6 +4,7 @@ import {
   paperImage,
   robotCamera,
   robotLose,
+  robotNone,
   robotWon,
   rockImage,
   scissorsImage,
@@ -29,12 +30,15 @@ export const GameComponent = () => {
     }
   }, []);
   const robotPoster = useMemo(() => {
-    if (gameState.status === STATUSES.ROBOT_WON) {
-      return robotWon;
-    } else if (gameState.status === STATUSES.PLAYER_WON) {
-      return robotLose;
-    } else {
-      return robotCamera;
+    switch (gameState.status) {
+      case STATUSES.ROBOT_WON:
+        return robotWon;
+      case STATUSES.PLAYER_WON:
+        return robotLose;
+      case STATUSES.NONE:
+        return robotNone;
+      default:
+        return robotCamera;
     }
   }, [gameState.status]);
 
@@ -43,6 +47,7 @@ export const GameComponent = () => {
       <link rel="prefetch" href={robotWon} />
       <link rel="prefetch" href={robotCamera} />
       <link rel="prefetch" href={robotLose} />
+      <link rel="prefetch" href={robotNone} />
       <link rel="prefetch" href={scissorsImage} />
       <link rel="prefetch" href={paperImage} />
       <link rel="prefetch" href={rockImage} />
@@ -55,6 +60,7 @@ export const GameComponent = () => {
             poster={humanImage}
             moveImage={gameState.player.image}
             isNotResolvedMove={gameState.status === STATUSES.PLAY}
+            isWon={gameState.status === STATUSES.PLAYER_WON}
           />
 
           <PlayerContainer
@@ -63,6 +69,7 @@ export const GameComponent = () => {
             poster={robotPoster}
             moveImage={gameState.robot.image}
             isNotResolvedMove={false}
+            isWon={gameState.status === STATUSES.ROBOT_WON}
           />
 
           <div className={styles.messages}>

@@ -10,17 +10,28 @@ type Props = {
   poster: typeof humanImage;
   moveImage: string | undefined;
   isNotResolvedMove: boolean;
+  isWon: boolean;
 };
 export const PlayerContainer = forwardRef(
   (
-    { score, name, poster, moveImage, isNotResolvedMove }: Props,
+    { score, name, poster, moveImage, isNotResolvedMove, isWon }: Props,
     ref: Ref<HTMLVideoElement>,
   ) => {
     return (
-      <div className={styles.player}>
+      <div
+        className={classNames(styles.player, {
+          [styles.won]: isWon,
+        })}
+      >
         <h2 className={styles.playerHeadline}>
           <span className={styles.nick}>{name}</span>
-          <span className={styles.score}>{score}</span>
+          <span
+            className={classNames(styles.score, {
+              [styles.fadeInOut]: isWon,
+            })}
+          >
+            {score}
+          </span>
         </h2>
         <div className={styles.playerContainer}>
           <video

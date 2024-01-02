@@ -1,6 +1,7 @@
 import humanImage from "./human.png";
 import paperImage from "./paper.png";
 import robotLose from "./robotLose.gif";
+import robotNone from "./robotNone.gif";
 import robotCamera from "./robotThinking.gif";
 import robotWon from "./robotWon.gif";
 import rockImage from "./rock.png";
@@ -14,4 +15,5 @@ export {
   paperImage,
   robotLose,
   robotWon,
+  robotNone,
 };

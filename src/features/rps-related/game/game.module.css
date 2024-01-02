@@ -8,7 +8,8 @@
     background: #0f0c29;
     background: linear-gradient(to left, #61dafb, #2cb4d9, #055d75);
     color:  #dae0e0;
-    height: calc(100vh - 33px);
+    padding: 10px;
+    min-height: calc(100vh - 33px);
     text-align: center;
 }
 
@@ -36,6 +37,7 @@
     border-radius: 8px;
     margin: 6px;
     width: calc(50% - 12px);
+    min-width: 285px;
     background-color: #555;
 }
 
@@ -57,12 +59,6 @@
 .fadeInOut {
     animation: fadeInOut 1s;
     animation-iteration-count: infinite;
-}
-
-@keyframes fadeInOut {
-    0% { opacity: 1; }
-    50% { opacity: 0.2; }
-    100% { opacity:1; }
 }
 
 .playerContainer {
@@ -125,3 +121,33 @@
     transform-origin: 50% 50%;
     color: #61dafb;
 }
+
+.won {
+    box-shadow: #61dafb 1px 1px;
+    text-shadow: #61dafb 1px 1px;
+    animation: infinite linear won 0.7s;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 1; }
+    50% { opacity: 0.2; }
+    100% { opacity:1; }
+}
+
+@keyframes won {
+    0% {
+        box-shadow: inset #61dafb 1px 1px 3px 2px;
+        text-shadow: #61dafb 1px 1px 3px;
+    }
+
+    50% {
+        box-shadow: inset #61dafb 1px 1px 15px 7px;
+        text-shadow: #2cb4d9 1px 1px 13px;
+    }
+
+    100% {
+        box-shadow: inset #61dafb 1px 1px 20px 10px;
+        text-shadow: #055d75 1px 1px 20px;
+    }
+}
+

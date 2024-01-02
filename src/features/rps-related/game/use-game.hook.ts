@@ -65,7 +65,7 @@ export const useGameHook = (videoRef: HTMLVideoElement | null) => {
     }
     setTimeout(() => {
       setNewMessage(STATUSES.READY);
-    }, 1500);
+    }, 2000);
   };
   const makeMove = (move: Move, isRobot?: boolean) => {
     let image = rockImage;
@@ -173,7 +173,7 @@ export const useGameHook = (videoRef: HTMLVideoElement | null) => {
           image: undefined,
         },
       }));
-      detectPlayerGesture(1000);
+      detectPlayerGesture(700);
     }
   }, 300);
 
