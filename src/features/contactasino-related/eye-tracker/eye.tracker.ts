@@ -31,16 +31,18 @@ const init = async (videoElement: HTMLVideoElement) => {
 const predict = async (handler: Dispatch<React.SetStateAction<number>>) => {
   try {
     const gazePrediction = await gaze.getGazePrediction();
-    console.log("Gaze direction: ", gazePrediction); //will return 'RIGHT', 'LEFT', 'STRAIGHT' or 'TOP'
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    window.predict = gaze.getGazePrediction;
     if (gazePrediction === "UP") {
-      // handler((current: number) => current + 1);
+      handler((current: number) => current + 1);
     }
   } catch (e) {
     console.warn(e);
   } finally {
     setTimeout(() => {
       raf = requestAnimationFrame(predict.bind(window, handler));
-    }, 1000);
+    }, 1);
   }
 };
 

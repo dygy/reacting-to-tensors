@@ -1,9 +1,7 @@
 import {
-  zhirik,
   papich,
   pepega,
   van,
-  deadge,
 } from "@features/contactasino-related/game/assets";
 import { debounce } from "lodash";
 import * as PIXI from "pixi.js";
@@ -89,13 +87,11 @@ function init(canvas: ICanvas) {
       tweening.splice(tweening.indexOf(item), 1);
     });
   });
-  PIXI.Assets.load([papich, van, pepega, deadge /*zhirik*/]).then(() =>
-    onAssetsLoaded(app),
-  );
+  PIXI.Assets.load([papich, van, pepega]).then(() => onAssetsLoaded(app));
 }
 
 const REEL_WIDTH = 160;
-const SYMBOL_SIZE = 150;
+const SYMBOL_SIZE = 160;
 
 let running = false;
 
@@ -104,8 +100,6 @@ function onAssetsLoaded(app: Application) {
     PIXI.Texture.from(papich),
     PIXI.Texture.from(pepega),
     PIXI.Texture.from(van),
-    PIXI.Texture.from(deadge),
-    // PIXI.Texture.from(zhirik),
   ];
 
   // Build the reels
@@ -153,7 +147,7 @@ function onAssetsLoaded(app: Application) {
   const margin = (app.screen.height - SYMBOL_SIZE * 3) / 2;
 
   reelContainer.y = margin;
-  reelContainer.x = Math.round(app.screen.width - REEL_WIDTH * 5);
+  reelContainer.x = app.screen.width / 2.2 - REEL_WIDTH;
   const top = new PIXI.Graphics();
 
   top.beginFill(0, 1);
@@ -171,7 +165,7 @@ function onAssetsLoaded(app: Application) {
     fontWeight: "bold",
     fill: ["#61dafb", "#94e1f6"], // gradient
     stroke: "#444",
-    strokeThickness: 5,
+    strokeThickness: 3,
     dropShadow: true,
     dropShadowColor: "#555",
     dropShadowBlur: 4,
@@ -189,7 +183,7 @@ function onAssetsLoaded(app: Application) {
   bottom.addChild(playText as DisplayObject);
 
   // Add header text
-  const headerText = new PIXI.Text("TRASH SLOT MACHINE! {NOT READY}", style);
+  const headerText = new PIXI.Text("TRASH SLOT MACHINE!", style);
 
   headerText.x = Math.round((top.width - headerText.width) / 2);
   headerText.y = Math.round((margin - headerText.height) / 2);
@@ -204,26 +198,24 @@ function onAssetsLoaded(app: Application) {
     reels.forEach((reel) => {
       reel.blur.blurY = (reel.position - reel.previousPosition) * 8;
       reel.previousPosition = reel.position;
+      reel.symbols.forEach((symbol, index) => {
+        const prevy = symbol.y;
 
-      for (let j = 0; j < reel.symbols.length; j++) {
-        const s = reel.symbols[j];
-        const prevy = s.y;
-
-        s.y =
-          ((reel.position + j) % reel.symbols.length) * SYMBOL_SIZE -
+        symbol.y =
+          ((reel.position + index) % reel.symbols.length) * SYMBOL_SIZE -
           SYMBOL_SIZE;
-        if (s.y < 0 && prevy > SYMBOL_SIZE) {
+        if (symbol.y < 0 && prevy > SYMBOL_SIZE) {
           // Detect going over and swap a texture.
           // This should in proper product be determined from some logical reel.
-          s.texture =
+          symbol.texture =
             slotTextures[Math.floor(Math.random() * slotTextures.length)];
-          s.scale.x = s.scale.y = Math.min(
-            SYMBOL_SIZE / s.texture.width,
-            SYMBOL_SIZE / s.texture.height,
+          symbol.scale.x = symbol.scale.y = Math.min(
+            SYMBOL_SIZE / symbol.texture.width,
+            SYMBOL_SIZE / symbol.texture.height,
           );
-          s.x = Math.round((SYMBOL_SIZE - s.width) / 2);
+          symbol.x = Math.round((SYMBOL_SIZE - symbol.width) / 2);
         }
-      }
+      });
     });
   });
 }
@@ -274,7 +266,7 @@ function startPlay() {
 
   reels.forEach((reel, index) => {
     const extra = Math.floor(Math.random() * 3);
-    const target = reel.position + 10 + index * 5 + extra;
+    const target = reel.position + 10 + index * 3 + extra;
     const time = 2500 + index * 600 + extra * 600;
 
     tweenTo(

@@ -23,7 +23,7 @@ export const EyeContactasinoGame = () => {
     <div>
       <NavigationComponent />
       <video style={{ display: "none" }} ref={videoRef} />
-      <canvas ref={canvasRef} />
+      <canvas style={{ objectFit: "cover", minHeight: 790 }} ref={canvasRef} />
     </div>
   );
 };

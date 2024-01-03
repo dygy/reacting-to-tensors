@@ -5,47 +5,14 @@ import "@tensorflow/tfjs-core";
 import { initPlayerVideo } from "@controls/camera";
 import * as tf from "@tensorflow/tfjs-core";
 import * as faceLandmarksDetection from "@tensorflow-models/face-landmarks-detection";
-import {
-  Face,
-  MediaPipeFaceMeshMediaPipeModelConfig,
-} from "@tensorflow-models/face-landmarks-detection";
+import { MediaPipeFaceMeshMediaPipeModelConfig } from "@tensorflow-models/face-landmarks-detection";
 
 let detector: faceLandmarksDetection.FaceLandmarksDetector;
 let video: HTMLVideoElement;
-let amountStraightEvents = 0;
-let positionXLeftIris: number;
-let positionYLeftIris: number;
-let event: string;
+let leftEyeIrisY: number;
 
-const normalize = (val, max, min) =>
-  Math.max(0, Math.min(1, (val - min) / (max - min)));
-
-const isFaceRotated = (landmarks: Face["box"]) => {
-  const leftCheek = landmarks.width;
-  const rightCheek = landmarks.height;
-  const midwayBetweenEyes = landmarks.xMax;
-
-  const xPositionLeftCheek = video.width - leftCheek[0][0];
-  const xPositionRightCheek = video.width - rightCheek[0][0];
-  const xPositionMidwayBetweenEyes = video.width - midwayBetweenEyes[0][0];
-
-  const widthLeftSideFace = xPositionMidwayBetweenEyes - xPositionLeftCheek;
-  const widthRightSideFace = xPositionRightCheek - xPositionMidwayBetweenEyes;
-
-  const difference = widthRightSideFace - widthLeftSideFace;
-
-  if (widthLeftSideFace < widthRightSideFace && Math.abs(difference) > 5) {
-    return true;
-  } else if (
-    widthLeftSideFace > widthRightSideFace &&
-    Math.abs(difference) > 5
-  ) {
-    return true;
-  }
-  return false;
-};
-
-async function renderPrediction() {
+async function renderPrediction(isLog?: boolean) {
+  let event = "DOWN";
   const estimationConfig = {
     flipHorizontal: false,
     returnTensors: false,
@@ -54,55 +21,43 @@ async function renderPrediction() {
   const predictions = await detector.estimateFaces(video, estimationConfig);
 
   if (predictions.length > 0) {
-    console.log(
-      predictions[0].keypoints.filter(({ name }) =>
-        Boolean(name?.includes("Iris")),
-      ),
-    );
-    console.log(
-      predictions[0].keypoints.filter(({ name }) =>
-        Boolean(name?.includes("face")),
-      ),
-    );
-    predictions.forEach((prediction: Face) => {
-      positionXLeftIris = prediction.keypoints[0][0];
-      positionYLeftIris = prediction.keypoints[0][1];
+    if (isLog ?? false) {
+      console.log(
+        predictions[0].keypoints.filter(({ name }) =>
+          Boolean(name?.includes("Iris")),
+        ),
+      );
+    }
 
-      const faceBottomLeftX = video.width - prediction.box.xMax[0]; // face is flipped horizontally so bottom right is actually bottom left.
-      const faceBottomLeftY = prediction.box.xMax[1];
+    predictions.forEach((prediction) => {
+      const leftEyeIris = prediction.keypoints.find(({ name }) =>
+        Boolean(name?.includes("leftIris")),
+      );
+      const leftEye = prediction.keypoints.find(({ name }) =>
+        Boolean(name?.includes("leftEye")),
+      );
+      /*
+      console.log(
+        prediction.keypoints
+          .filter(({ name }) => name !== undefined)
+          .map(({ name }) => name),
+      );
+       */
 
-      const faceTopRightX = video.width - prediction.box.yMin[0]; // face is flipped horizontally so top left is actually top right.
-      const faceTopRightY = prediction.box.yMin[1];
+      if (!leftEyeIris || !leftEye) {
+        return;
+      }
 
-      if (faceBottomLeftX > 0 && !isFaceRotated(prediction.box)) {
-        const positionLeftIrisX = video.width - positionXLeftIris;
-        const normalizedXIrisPosition = normalize(
-          positionLeftIrisX,
-          faceTopRightX,
-          faceBottomLeftX,
-        );
+      leftEyeIrisY = leftEyeIris.y;
 
-        if (normalizedXIrisPosition > 0.355) {
-          event = "RIGHT";
-        } else if (normalizedXIrisPosition < 0.315) {
-          event = "LEFT";
-        } else {
-          amountStraightEvents++;
-          if (amountStraightEvents > 8) {
-            event = "STRAIGHT";
-            amountStraightEvents = 0;
-          }
-        }
+      const leftEyeY = leftEye.y;
 
-        const normalizedYIrisPosition = normalize(
-          positionYLeftIris,
-          faceTopRightY,
-          faceBottomLeftY,
-        );
+      const normalizedYIrisPosition = leftEyeY - leftEyeIrisY;
 
-        if (normalizedYIrisPosition > 0.62) {
-          event = "TOP";
-        }
+      console.log(normalizedYIrisPosition);
+
+      if (normalizedYIrisPosition > 4.5) {
+        event = "UP";
       }
     });
   }
