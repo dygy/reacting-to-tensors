@@ -146,15 +146,15 @@ function onAssetsLoaded(app: Application) {
   // Build top & bottom covers and position reelContainer
   const margin = (app.screen.height - SYMBOL_SIZE * 3) / 2;
 
-  reelContainer.y = margin;
+  reelContainer.y = margin + 5;
   reelContainer.x = app.screen.width / 2.2 - REEL_WIDTH;
   const top = new PIXI.Graphics();
 
-  top.beginFill(0, 1);
+  top.beginFill("#055d75", 1);
   top.drawRect(0, 0, app.screen.width, margin);
   const bottom = new PIXI.Graphics();
 
-  bottom.beginFill(0, 1);
+  bottom.beginFill("#055d75", 1);
   bottom.drawRect(0, SYMBOL_SIZE * 3 + margin, app.screen.width, margin);
 
   // Add play text
