@@ -1,0 +1,8 @@
+.canvas {
+    width: calc(100vw - 18px);
+    height: calc(100vh - 32px);
+}
+
+.video {
+    display: none;
+}

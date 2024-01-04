@@ -1,9 +1,9 @@
 import { NavigationComponent } from "@components/navigation/navigation.component";
 import { useEyes } from "@features/contactasino-related/eye-tracker/eye.tracker";
+import styles from "@features/contactasino-related/game/eye-contactasino.module.css";
 import { useGameHook } from "@features/contactasino-related/game/use-game.hook";
 
 import { useEffect, useRef, useState } from "react";
-
 export const EyeContactasinoGame = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -22,8 +22,8 @@ export const EyeContactasinoGame = () => {
   return (
     <div>
       <NavigationComponent />
-      <video style={{ display: "none" }} ref={videoRef} />
-      <canvas style={{ objectFit: "cover", minHeight: 790 }} ref={canvasRef} />
+      <video className={styles.video} ref={videoRef} />
+      <canvas className={styles.canvas} ref={canvasRef} />
     </div>
   );
 };

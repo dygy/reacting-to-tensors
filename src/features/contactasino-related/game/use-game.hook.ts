@@ -61,8 +61,8 @@ const reels: Array<Reel> = [];
 function init(canvas: ICanvas) {
   const app = new PIXI.Application({
     background: "#61dafb",
-    resizeTo: window,
     view: canvas,
+    resizeTo: window,
   });
   // Listen for animate update.
   app.ticker.add((delta) => {
