@@ -11,7 +11,7 @@ $shadows-medium: multiple-box-shadow(200);
 $shadows-big: multiple-box-shadow(100);
 
 .container {
-  height: calc(100vh - 34px);
+  min-height: calc(100vh - 34px);
   max-width: 100vw;
   background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
   overflow: hidden;
@@ -21,6 +21,7 @@ $shadows-big: multiple-box-shadow(100);
   flex-direction: row;
   flex-wrap: wrap;
   gap: 15px;
+  padding: 10px;
 }
 
 .stars {
