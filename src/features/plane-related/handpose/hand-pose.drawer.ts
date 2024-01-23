@@ -44,8 +44,10 @@ class HandPoseDrawer {
     });
 
     for (const hand of hands) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+      if (!hand.keypoints3D) {
+        return;
+      }
+      // @ts-expect-error: problem with types on TF side
       const gestureEstimations = this.GE.estimate(hand.keypoints3D, 9);
       const chosenHand = hand.handedness.toLowerCase() as Hand;
       if (gestureEstimations.gestures.length > 0) {
