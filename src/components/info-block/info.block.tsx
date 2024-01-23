@@ -5,8 +5,6 @@ import {
   rockPapperScissors,
 } from "@components/info-block/assets";
 
-import { ElementType } from "react";
-
 import styles from "./info-block.module.scss";
 type Props = {
   gameplay: string;

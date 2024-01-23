@@ -50,7 +50,7 @@ export const PlayerContainer = forwardRef(
           >
             {moveImage != null && (
               <>
-                <img className={styles.playerHand} src={moveImage} />
+                <img className={styles.playerHand} src={moveImage} alt={name} />
                 <svg height="100" width="100">
                   <circle
                     className={styles.timerRingCircle}
