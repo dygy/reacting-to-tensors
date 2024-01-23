@@ -31,9 +31,7 @@ const init = async (videoElement: HTMLVideoElement) => {
 const predict = async (handler: Dispatch<React.SetStateAction<number>>) => {
   try {
     const gazePrediction = await gaze.getGazePrediction();
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    window.predict = gaze.getGazePrediction;
+
     if (gazePrediction === "UP") {
       handler((current: number) => current + 1);
     }
