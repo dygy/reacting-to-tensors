@@ -2,7 +2,6 @@
   "name": "reacting-to-tensors",
   "version": "0.1.0",
   "private": true,
-  "homepage": ".",
   "dependencies": {
     "@craco/craco": "^5.9.0",
     "@tensorflow-models/face-landmarks-detection": "^1.0.5",
