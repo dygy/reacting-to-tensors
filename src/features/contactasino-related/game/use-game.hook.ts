@@ -54,7 +54,7 @@ export const useGameHook = (
       setCount(eyeContact);
       debouncedStart();
     }
-  }, [eyeContact, localCount]);
+  }, [debouncedStart, eyeContact, localCount]);
 };
 
 const reels: Array<Reel> = [];

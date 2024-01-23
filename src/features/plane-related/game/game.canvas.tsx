@@ -8,7 +8,7 @@ import styles from "./game.module.css";
 
 export const GameCanvas = () => {
   const { buttonState } = useContext(GameStateContext);
-  const ref = useRef<HTMLCanvasElement>();
+  const ref = useRef<HTMLCanvasElement>(null);
   const [canvas, setCanvas] = useState<HTMLCanvasElement | void>();
   useEffect(() => {
     if (ref.current) setCanvas(ref.current);
@@ -21,13 +21,11 @@ export const GameCanvas = () => {
     if (buttonState.left.loading) {
       changeX("left");
     }
-  }, [buttonState.left.loading, buttonState.right.loading]);
+  }, [buttonState.left.loading, buttonState.right.loading, changeX]);
 
   return (
     <div>
       <BackgroundComponent />
-      {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-      {/* @ts-ignore */}
       <canvas className={styles.canvas} ref={ref} />
       {loading && <div>loading </div>}
     </div>
