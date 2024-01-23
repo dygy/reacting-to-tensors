@@ -1,4 +1,4 @@
-# Getting Started with Create React HandposePlaneGame
+# Getting Started with reacting-to-tensors
 ## Available Scripts
 ### `npm start`
 Runs the app in the development mode.\
