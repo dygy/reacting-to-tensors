@@ -7,7 +7,6 @@ import {
 
 import styles from "./info-block.module.scss";
 type Props = {
-  gameplay: string;
   title: string;
   href: string;
 };
@@ -30,7 +29,7 @@ const videos: Record<ArrayElement<typeof routes>["id"], string> = {
   "eye contactasino": eyecontactasino,
 };
 
-export const InfoBlock = ({ title, gameplay, href }: Props) => {
+export const InfoBlock = ({ title, href }: Props) => {
   return (
     <div className={styles.block}>
       <h1>{title}</h1>

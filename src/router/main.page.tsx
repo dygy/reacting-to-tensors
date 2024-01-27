@@ -11,12 +11,7 @@ export const MainPage = () => {
         {routes
           .filter((el) => el.path !== "/")
           .map((route) => (
-            <InfoBlock
-              key={route.id}
-              gameplay={""}
-              title={route.id}
-              href={route.path}
-            />
+            <InfoBlock key={route.id} title={route.id} href={route.path} />
           ))}
       </SpaceBackground>
     </div>
